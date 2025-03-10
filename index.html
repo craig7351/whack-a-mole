@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打地鼠游戏</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+        .hole { width: 60px; height: 60px; border: 2px solid #000; position: relative; margin: 0; }
+        .mole { width: 60px; height: 60px; background: brown; position: absolute; bottom: 0; display: none; transition: transform 0.1s; }
+        .mole.hit { transform: scale(1.2); } /* 添加击中效果 */
+        #score, #timer { margin: 5px 0; } /* 设置上下间距为5px */
+        #debug { position: absolute; top: 10px; left: 10px; font-size: 24px; color: red; background: rgba(255, 255, 255, 0.8); padding: 5px; border: 2px solid red; border-radius: 5px; z-index: 10; } /* 增加背景和边框 */
+    </style>
+</head>
+<body>
+    <h1>打地鼠游戏</h1>
+    <div id="debug">调试信息</div> <!-- 初始调试信息 -->
+    <div id="game" class="grid">
+        <div class="hole" data-index="7"><div class="mole"></div></div> <!-- 7 -->
+        <div class="hole" data-index="8"><div class="mole"></div></div> <!-- 8 -->
+        <div class="hole" data-index="9"><div class="mole"></div></div> <!-- 9 -->
+        <div class="hole" data-index="4"><div class="mole"></div></div> <!-- 4 -->
+        <div class="hole" data-index="5"><div class="mole"></div></div> <!-- 5 -->
+        <div class="hole" data-index="6"><div class="mole"></div></div> <!-- 6 -->
+        <div class="hole" data-index="1"><div class="mole"></div></div> <!-- 1 -->
+        <div class="hole" data-index="2"><div class="mole"></div></div> <!-- 2 -->
+        <div class="hole" data-index="3"><div class="mole"></div></div> <!-- 3 -->
+    </div>
+    <div id="score">分数: 0</div>
+    <div id="timer">剩余时间: 60秒</div>
+
+    <script>
+        let score = 0;
+        let timeLeft = 60;
+        let moleInterval;
+        let moleSpeed = 1000; // 初始速度
+        const moles = document.querySelectorAll('.mole');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+        const debugDisplay = document.getElementById('debug');
+
+        // 映射数组，将地鼠位置映射到键盘数字
+        const indexMapping = [7, 8, 9, 4, 5, 6, 1, 2, 3];
+
+        function showMole() {
+            const randomIndex = Math.floor(Math.random() * 9); // 生成0到8的随机数
+            const mappedIndex = indexMapping[randomIndex]; // 获取映射后的索引
+            moles[randomIndex].style.display = 'block'; // 显示地鼠
+            moles[randomIndex].classList.remove('hit'); // 移除击中效果
+            debugDisplay.textContent = `地鼠出现位置: ${mappedIndex}`; // 显示地鼠出现的位置
+            setTimeout(() => {
+                moles[randomIndex].style.display = 'none';
+            }, moleSpeed);
+        }
+
+        function startGame() {
+            moleInterval = setInterval(showMole, moleSpeed);
+            const timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `剩余时间: ${timeLeft}秒`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    clearInterval(moleInterval);
+                    alert(`游戏结束! 你的分数是: ${score}`);
+                }
+                if (timeLeft <= 20) {
+                    moleSpeed = 500; // 加快速度
+                    clearInterval(moleInterval);
+                    moleInterval = setInterval(showMole, moleSpeed);
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            if (key >= 1 && key <= 9) {
+                debugDisplay.textContent = `你按下了: ${key}`;
+                const index = indexMapping.indexOf(parseInt(key)); // 找到按键对应的索引
+                if (index !== -1 && moles[index].style.display === 'block') {
+                    score += (timeLeft > 40) ? 100 : 200; // 根据时间加分
+                    scoreDisplay.textContent = `分数: ${score}`;
+                    moles[index].classList.add('hit'); // 添加击中效果
+                    setTimeout(() => {
+                        moles[index].style.display = 'none'; // 确保地鼠在击中后隐藏
+                    }, 100); // 短暂显示击中效果
+                }
+            } else {
+                debugDisplay.textContent = '';
+            }
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
