@@ -9,11 +9,28 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #FFF0F5; /* 淡紫色背景 */
+            background-color: #E0FFE0; /* 淡绿色背景 */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative;
+        }
+        h1, #score, #timer {
+            position: absolute;
+            left: 10px;
+            margin: 0;
+            font-size: 24px;
+            color: #006400; /* 深绿色文字 */
+        }
+        h1 {
+            top: 10px;
+        }
+        #score {
+            top: 40px;
+        }
+        #timer {
+            top: 70px;
         }
         .grid {
             display: grid;
@@ -24,7 +41,7 @@
         .hole {
             width: 100px;
             height: 100px;
-            background: #FFB6C1; /* 淺粉紅 */
+            background: #98FB98; /* 淺綠色 */
             border-radius: 50%;
             position: relative;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
@@ -63,12 +80,9 @@
             background-image: url('dizzy-mole.png'); /* 晕倒状态的地鼠图片 */
             transform: rotate(20deg) scale(0.9); /* 添加旋转和缩放效果 */
         }
-        #score, #timer {
-            margin: 5px 0;
-        }
         #debug {
             position: absolute;
-            top: 10px;
+            top: 100px;
             left: 10px;
             font-size: 24px;
             color: red;
@@ -77,11 +91,14 @@
             border: 2px solid red;
             border-radius: 5px;
             z-index: 10;
+            display: none; /* 默认隐藏 */
         }
     </style>
 </head>
 <body>
     <h1>打地鼠游戏</h1>
+    <div id="score">分数: 0</div>
+    <div id="timer">剩余时间: 60秒</div>
     <div id="debug">调试信息</div>
     <div id="game" class="grid">
         <div class="hole" data-index="7"><div class="mole"></div></div> <!-- 7 -->
@@ -94,10 +111,9 @@
         <div class="hole" data-index="2"><div class="mole"></div></div> <!-- 2 -->
         <div class="hole" data-index="3"><div class="mole"></div></div> <!-- 3 -->
     </div>
-    <div id="score">分数: 0</div>
-    <div id="timer">剩余时间: 60秒</div>
 
     <script>
+        const DEBUG_MODE = 0; // 设置为1以显示调试信息
         let score = 0;
         let timeLeft = 60;
         let moleInterval;
@@ -107,6 +123,10 @@
         const scoreDisplay = document.getElementById('score');
         const timerDisplay = document.getElementById('timer');
         const debugDisplay = document.getElementById('debug');
+
+        if (DEBUG_MODE) {
+            debugDisplay.style.display = 'block';
+        }
 
         // 映射数组，将地鼠位置映射到键盘数字
         const indexMapping = [7, 8, 9, 4, 5, 6, 1, 2, 3];
@@ -121,7 +141,9 @@
                         const mappedIndex = indexMapping[randomIndex]; // 获取映射后的索引
                         moles[randomIndex].classList.add('show'); // 显示地鼠
                         moles[randomIndex].classList.remove('hit'); // 移除击中效果
-                        debugDisplay.textContent = `地鼠出现位置: ${mappedIndex}`; // 显示地鼠出现的位置
+                        if (DEBUG_MODE) {
+                            debugDisplay.textContent = `地鼠出现位置: ${mappedIndex}`; // 显示地鼠出现的位置
+                        }
                     }
                 }
                 if (activeMoles.size >= maxMoles) {
@@ -157,7 +179,9 @@
         document.addEventListener('keydown', (event) => {
             const key = event.key;
             if (key >= 1 && key <= 9) {
-                debugDisplay.textContent = `你按下了: ${key}`;
+                if (DEBUG_MODE) {
+                    debugDisplay.textContent = `你按下了: ${key}`;
+                }
                 const index = indexMapping.indexOf(parseInt(key)); // 找到按键对应的索引
                 if (index !== -1 && moles[index].classList.contains('show')) {
                     score += (timeLeft > 40) ? 100 : 200; // 根据时间加分
@@ -168,7 +192,7 @@
                         moles[index].classList.remove('show');
                     }, 500); // 显示晕倒效果的时间
                 }
-            } else {
+            } else if (DEBUG_MODE) {
                 debugDisplay.textContent = '';
             }
         });
