@@ -33,31 +33,18 @@
             top: 70px;
         }
         .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
-            gap: 15px;
+            width: 900px; /* 根据背景图片的实际尺寸调整 */
+            height: 900px; /* 根据背景图片的实际尺寸调整 */
+            background-image: url('map.webp');
+            background-size: cover;
+            position: relative;
         }
         .hole {
             width: 100px;
             height: 100px;
-            background: #98FB98; /* 淺綠色 */
-            border-radius: 50%;
-            position: relative;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            position: absolute;
             overflow: hidden;
             transition: transform 0.2s;
-        }
-        .hole::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 80%;
-            height: 20%;
-            background: #FFF;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
         }
         .hole:active {
             transform: scale(0.95);
@@ -101,15 +88,15 @@
     <div id="timer">剩余时间: 60秒</div>
     <div id="debug">调试信息</div>
     <div id="game" class="grid">
-        <div class="hole" data-index="7"><div class="mole"></div></div> <!-- 7 -->
-        <div class="hole" data-index="8"><div class="mole"></div></div> <!-- 8 -->
-        <div class="hole" data-index="9"><div class="mole"></div></div> <!-- 9 -->
-        <div class="hole" data-index="4"><div class="mole"></div></div> <!-- 4 -->
-        <div class="hole" data-index="5"><div class="mole"></div></div> <!-- 5 -->
-        <div class="hole" data-index="6"><div class="mole"></div></div> <!-- 6 -->
-        <div class="hole" data-index="1"><div class="mole"></div></div> <!-- 1 -->
-        <div class="hole" data-index="2"><div class="mole"></div></div> <!-- 2 -->
-        <div class="hole" data-index="3"><div class="mole"></div></div> <!-- 3 -->
+        <div class="hole" data-index="7" style="top: 380px; left: 270px;"><div class="mole"></div></div> <!-- 7 -->
+        <div class="hole" data-index="8" style="top: 380px; left: 410px;"><div class="mole"></div></div> <!-- 8 -->
+        <div class="hole" data-index="9" style="top: 380px; left: 540px;"><div class="mole"></div></div> <!-- 9 -->
+        <div class="hole" data-index="4" style="top: 490px; left: 270px;"><div class="mole"></div></div> <!-- 4 -->
+        <div class="hole" data-index="5" style="top: 490px; left: 410px;"><div class="mole"></div></div> <!-- 5 -->
+        <div class="hole" data-index="6" style="top: 490px; left: 540px;"><div class="mole"></div></div> <!-- 6 -->
+        <div class="hole" data-index="1" style="top: 610px; left: 270px;"><div class="mole"></div></div> <!-- 1 -->
+        <div class="hole" data-index="2" style="top: 610px; left: 410px;"><div class="mole"></div></div> <!-- 2 -->
+        <div class="hole" data-index="3" style="top: 610px; left: 540px;"><div class="mole"></div></div> <!-- 3 -->
     </div>
 
     <script>
