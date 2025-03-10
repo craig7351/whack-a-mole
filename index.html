@@ -56,8 +56,9 @@
             background-size: cover;
             position: absolute;
             bottom: 0;
+            transform: translateY(100%); /* 初始位置在洞底 */
             display: none;
-            transition: transform 0.3s;
+            transition: transform 0.5s ease-out; /* 平滑过渡效果 */
         }
         .mole.show {
             display: block;
@@ -126,7 +127,10 @@
                     if (!activeMoles.has(randomIndex)) {
                         activeMoles.add(randomIndex);
                         const mappedIndex = indexMapping[randomIndex]; // 获取映射后的索引
-                        moles[randomIndex].classList.add('show'); // 显示地鼠
+                        moles[randomIndex].style.display = 'block'; // 确保地鼠显示
+                        setTimeout(() => {
+                            moles[randomIndex].classList.add('show'); // 显示地鼠
+                        }, 10); // 确保过渡效果生效
                         moles[randomIndex].classList.remove('hit'); // 移除击中效果
                         if (DEBUG_MODE) {
                             debugDisplay.textContent = `地鼠出现位置: ${mappedIndex}`; // 显示地鼠出现的位置
@@ -141,6 +145,9 @@
             setTimeout(() => {
                 activeMoles.forEach(index => {
                     moles[index].classList.remove('show');
+                    setTimeout(() => {
+                        moles[index].style.display = 'none'; // 隐藏地鼠
+                    }, 500); // 确保过渡效果完成后隐藏
                 });
             }, moleSpeed);
         }
@@ -177,6 +184,7 @@
                     setTimeout(() => {
                         moles[index].classList.remove('hit');
                         moles[index].classList.remove('show');
+                        moles[index].style.display = 'none'; // 确保地鼠隐藏
                     }, 500); // 显示晕倒效果的时间
                 }
             } else if (DEBUG_MODE) {
